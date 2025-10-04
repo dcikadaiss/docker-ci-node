@@ -1,23 +1,35 @@
 // eslint.config.js
-import js from '@eslint/js';
-import globals from 'globals';
+const jestPlugin = require('eslint-plugin-jest');
 
-export default [
-  js.configs.recommended,
+module.exports = [
   {
     files: ['**/*.js'],
-    ignores: ['node_modules/**'],
+    ignores: ['node_modules/**', 'tests/**'],
     languageOptions: {
       ecmaVersion: 'latest',
-      sourceType: 'module', // ← Changé à 'module'
+      sourceType: 'script',
       globals: {
-        ...globals.node, // ← Ajout des globals Node.js (console, require, etc.)
-        ...globals.jest  // ← Ajout des globals Jest (test, expect, describe, etc.)
+        console: 'readonly',
+        process: 'readonly',
+        require: 'readonly',
+        module: 'readonly',
+        exports: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly'
       }
     },
     rules: {
       'no-unused-vars': 'warn',
       'no-console': 'off'
+    }
+  },
+  {
+    files: ['tests/**', '**/*.test.js'],
+    plugins: {
+      jest: jestPlugin
+    },
+    rules: {
+      ...jestPlugin.configs.recommended.rules
     }
   }
 ];
