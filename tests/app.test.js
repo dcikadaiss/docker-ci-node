@@ -1,15 +1,17 @@
 const request = require('supertest');
-const app = require('../index');
+const app = require('../app');
 
 describe('Test endpoint /', () => {
   let server;
 
-  beforeAll((done) => {
-    server = app.listen(3000, done);
+  beforeAll(async () => {
+    server = app.listen(3000);
+    // Attendre que le serveur soit prêt
+    await new Promise(resolve => server.once('listening', resolve));
   });
 
-  afterAll((done) => {
-    server.close(done);
+  afterAll(async () => {
+    await new Promise(resolve => server.close(resolve));
   });
 
   it('should return 200 and Hello message', async () => {
